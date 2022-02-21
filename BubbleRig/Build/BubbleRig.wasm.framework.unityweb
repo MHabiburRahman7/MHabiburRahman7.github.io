@@ -487,18 +487,18 @@ function alignMemory(size, factor) {
 }
 function getNativeTypeSize(type) {
  switch (type) {
- case "i1":
- case "i8":
+ "i1":
+ "i8":
   return 1;
- case "i16":
+ "i16":
   return 2;
- case "i32":
+ "i32":
   return 4;
- case "i64":
+ "i64":
   return 8;
- case "float":
+ "float":
   return 4;
- case "double":
+ "double":
   return 8;
  default:
   {
@@ -657,25 +657,25 @@ function setValue(ptr, value, type, noSafe) {
  type = type || "i8";
  if (type.charAt(type.length - 1) === "*") type = "i32";
  switch (type) {
- case "i1":
+ "i1":
   HEAP8[ptr >> 0] = value;
   break;
- case "i8":
+ "i8":
   HEAP8[ptr >> 0] = value;
   break;
- case "i16":
+ "i16":
   HEAP16[ptr >> 1] = value;
   break;
- case "i32":
+ "i32":
   HEAP32[ptr >> 2] = value;
   break;
- case "i64":
+ "i64":
   tempI64 = [ value >>> 0, (tempDouble = value, +Math_abs(tempDouble) >= 1 ? tempDouble > 0 ? (Math_min(+Math_floor(tempDouble / 4294967296), 4294967295) | 0) >>> 0 : ~~+Math_ceil((tempDouble - +(~~tempDouble >>> 0)) / 4294967296) >>> 0 : 0) ], HEAP32[ptr >> 2] = tempI64[0], HEAP32[ptr + 4 >> 2] = tempI64[1];
   break;
- case "float":
+ "float":
   HEAPF32[ptr >> 2] = value;
   break;
- case "double":
+ "double":
   HEAPF64[ptr >> 3] = value;
   break;
  default:
@@ -3432,16 +3432,16 @@ function _JS_Log_Dump(ptr, type) {
  var str = Pointer_stringify(ptr);
  if (typeof dump == "function") dump(str);
  switch (type) {
- case 0:
- case 1:
- case 4:
+ 0:
+ 1:
+ 4:
   console.error(str);
   return;
- case 2:
+ 2:
   console.warn(str);
   return;
- case 3:
- case 5:
+ 3:
+ 5:
   console.log(str);
   return;
  default:
@@ -7528,11 +7528,11 @@ var SYSCALLS = {
  }),
  doMknod: (function(path, mode, dev) {
   switch (mode & 61440) {
-  case 32768:
-  case 8192:
-  case 24576:
-  case 4096:
-  case 49152:
+  32768:
+  8192:
+  24576:
+  4096:
+  49152:
    break;
   default:
    return -ERRNO_CODES.EINVAL;
@@ -7896,7 +7896,7 @@ var SOCKFS = {
   }),
   ioctl: (function(sock, request, arg) {
    switch (request) {
-   case 21531:
+   21531:
     var bytes = 0;
     if (sock.recv_queue.length) {
      bytes = sock.recv_queue[0].data.length;
@@ -8257,7 +8257,7 @@ function __read_sockaddr(sa, salen) {
  var port = _ntohs(HEAP16[sa + 2 >> 1]);
  var addr;
  switch (family) {
- case 2:
+ 2:
   if (salen !== 16) {
    return {
     errno: ERRNO_CODES.EINVAL
@@ -8266,7 +8266,7 @@ function __read_sockaddr(sa, salen) {
   addr = HEAP32[sa + 4 >> 2];
   addr = __inet_ntop4_raw(addr);
   break;
- case 10:
+ 10:
   if (salen !== 28) {
    return {
     errno: ERRNO_CODES.EINVAL
@@ -8288,13 +8288,13 @@ function __read_sockaddr(sa, salen) {
 }
 function __write_sockaddr(sa, family, addr, port) {
  switch (family) {
- case 2:
+ 2:
   addr = __inet_pton4_raw(addr);
   HEAP16[sa >> 1] = family;
   HEAP32[sa + 4 >> 2] = addr;
   HEAP16[sa + 2 >> 1] = _htons(port);
   break;
- case 10:
+ 10:
   addr = __inet_pton6_raw(addr);
   HEAP32[sa >> 2] = family;
   HEAP32[sa + 8 >> 2] = addr[0];
@@ -8318,32 +8318,32 @@ function ___syscall102(which, varargs) {
   var call = SYSCALLS.get(), socketvararg = SYSCALLS.get();
   SYSCALLS.varargs = socketvararg;
   switch (call) {
-  case 1:
+  1:
    {
     var domain = SYSCALLS.get(), type = SYSCALLS.get(), protocol = SYSCALLS.get();
     var sock = SOCKFS.createSocket(domain, type, protocol);
     assert(sock.stream.fd < 64);
     return sock.stream.fd;
    }
-  case 2:
+  2:
    {
     var sock = SYSCALLS.getSocketFromFD(), info = SYSCALLS.getSocketAddress();
     sock.sock_ops.bind(sock, info.addr, info.port);
     return 0;
    }
-  case 3:
+  3:
    {
     var sock = SYSCALLS.getSocketFromFD(), info = SYSCALLS.getSocketAddress();
     sock.sock_ops.connect(sock, info.addr, info.port);
     return 0;
    }
-  case 4:
+  4:
    {
     var sock = SYSCALLS.getSocketFromFD(), backlog = SYSCALLS.get();
     sock.sock_ops.listen(sock, backlog);
     return 0;
    }
-  case 5:
+  5:
    {
     var sock = SYSCALLS.getSocketFromFD(), addr = SYSCALLS.get(), addrlen = SYSCALLS.get();
     var newsock = sock.sock_ops.accept(sock);
@@ -8353,14 +8353,14 @@ function ___syscall102(which, varargs) {
     }
     return newsock.stream.fd;
    }
-  case 6:
+  6:
    {
     var sock = SYSCALLS.getSocketFromFD(), addr = SYSCALLS.get(), addrlen = SYSCALLS.get();
     var res = __write_sockaddr(addr, sock.family, DNS.lookup_name(sock.saddr || "0.0.0.0"), sock.sport);
     assert(!res.errno);
     return 0;
    }
-  case 7:
+  7:
    {
     var sock = SYSCALLS.getSocketFromFD(), addr = SYSCALLS.get(), addrlen = SYSCALLS.get();
     if (!sock.daddr) {
@@ -8370,7 +8370,7 @@ function ___syscall102(which, varargs) {
     assert(!res.errno);
     return 0;
    }
-  case 11:
+  11:
    {
     var sock = SYSCALLS.getSocketFromFD(), message = SYSCALLS.get(), length = SYSCALLS.get(), flags = SYSCALLS.get(), dest = SYSCALLS.getSocketAddress(true);
     if (!dest) {
@@ -8379,7 +8379,7 @@ function ___syscall102(which, varargs) {
      return sock.sock_ops.sendmsg(sock, HEAP8, message, length, dest.addr, dest.port);
     }
    }
-  case 12:
+  12:
    {
     var sock = SYSCALLS.getSocketFromFD(), buf = SYSCALLS.get(), len = SYSCALLS.get(), flags = SYSCALLS.get(), addr = SYSCALLS.get(), addrlen = SYSCALLS.get();
     var msg = sock.sock_ops.recvmsg(sock, len);
@@ -8391,11 +8391,11 @@ function ___syscall102(which, varargs) {
     HEAPU8.set(msg.buffer, buf);
     return msg.buffer.byteLength;
    }
-  case 14:
+  14:
    {
     return -ERRNO_CODES.ENOPROTOOPT;
    }
-  case 15:
+  15:
    {
     var sock = SYSCALLS.getSocketFromFD(), level = SYSCALLS.get(), optname = SYSCALLS.get(), optval = SYSCALLS.get(), optlen = SYSCALLS.get();
     if (level === 1) {
@@ -8408,7 +8408,7 @@ function ___syscall102(which, varargs) {
     }
     return -ERRNO_CODES.ENOPROTOOPT;
    }
-  case 16:
+  16:
    {
     var sock = SYSCALLS.getSocketFromFD(), message = SYSCALLS.get(), flags = SYSCALLS.get();
     var iov = HEAP32[message + 8 >> 2];
@@ -8437,7 +8437,7 @@ function ___syscall102(which, varargs) {
     }
     return sock.sock_ops.sendmsg(sock, view, 0, total, addr, port);
    }
-  case 17:
+  17:
    {
     var sock = SYSCALLS.getSocketFromFD(), message = SYSCALLS.get(), flags = SYSCALLS.get();
     var iov = HEAP32[message + 8 >> 2];
@@ -8776,7 +8776,7 @@ function ___syscall221(which, varargs) {
  try {
   var stream = SYSCALLS.getStreamFromFD(), cmd = SYSCALLS.get();
   switch (cmd) {
-  case 0:
+  0:
    {
     var arg = SYSCALLS.get();
     if (arg < 0) {
@@ -8786,34 +8786,34 @@ function ___syscall221(which, varargs) {
     newStream = FS.open(stream.path, stream.flags, 0, arg);
     return newStream.fd;
    }
-  case 1:
-  case 2:
+  1:
+  2:
    return 0;
-  case 3:
+  3:
    return stream.flags;
-  case 4:
+  4:
    {
     var arg = SYSCALLS.get();
     stream.flags |= arg;
     return 0;
    }
-  case 12:
-  case 12:
+  12:
+  12:
    {
     var arg = SYSCALLS.get();
     var offset = 0;
     HEAP16[arg + offset >> 1] = 2;
     return 0;
    }
-  case 13:
-  case 14:
-  case 13:
-  case 14:
+  13:
+  14:
+  13:
+  14:
    return 0;
-  case 16:
-  case 8:
+  16:
+  8:
    return -ERRNO_CODES.EINVAL;
-  case 9:
+  9:
    ___setErrNo(ERRNO_CODES.EINVAL);
    return -1;
   default:
@@ -9114,45 +9114,45 @@ function ___syscall54(which, varargs) {
  try {
   var stream = SYSCALLS.getStreamFromFD(), op = SYSCALLS.get();
   switch (op) {
-  case 21509:
-  case 21505:
+  21509:
+  21505:
    {
     if (!stream.tty) return -ERRNO_CODES.ENOTTY;
     return 0;
    }
-  case 21510:
-  case 21511:
-  case 21512:
-  case 21506:
-  case 21507:
-  case 21508:
+  21510:
+  21511:
+  21512:
+  21506:
+  21507:
+  21508:
    {
     if (!stream.tty) return -ERRNO_CODES.ENOTTY;
     return 0;
    }
-  case 21519:
+  21519:
    {
     if (!stream.tty) return -ERRNO_CODES.ENOTTY;
     var argp = SYSCALLS.get();
     HEAP32[argp >> 2] = 0;
     return 0;
    }
-  case 21520:
+  21520:
    {
     if (!stream.tty) return -ERRNO_CODES.ENOTTY;
     return -ERRNO_CODES.EINVAL;
    }
-  case 21531:
+  21531:
    {
     var argp = SYSCALLS.get();
     return FS.ioctl(stream, op, argp);
    }
-  case 21523:
+  21523:
    {
     if (!stream.tty) return -ERRNO_CODES.ENOTTY;
     return 0;
    }
-  case 21524:
+  21524:
    {
     if (!stream.tty) return -ERRNO_CODES.ENOTTY;
     return 0;
@@ -9954,13 +9954,13 @@ var Browser = {
  getMouseWheelDelta: (function(event) {
   var delta = 0;
   switch (event.type) {
-  case "DOMMouseScroll":
+  "DOMMouseScroll":
    delta = event.detail;
    break;
-  case "mousewheel":
+  "mousewheel":
    delta = event.wheelDelta;
    break;
-  case "wheel":
+  "wheel":
    delta = event["deltaY"];
    break;
   default:
@@ -11171,23 +11171,23 @@ function __formatString(format, varargs) {
    var flagPadSign = false;
    flagsLoop : while (1) {
     switch (next) {
-    case 43:
+    43:
      flagAlwaysSigned = true;
      break;
-    case 45:
+    45:
      flagLeftAlign = true;
      break;
-    case 35:
+    35:
      flagAlternative = true;
      break;
-    case 48:
+    48:
      if (flagZeroPad) {
       break flagsLoop;
      } else {
       flagZeroPad = true;
       break;
      }
-    case 32:
+    32:
      flagPadSign = true;
      break;
     default:
@@ -11233,7 +11233,7 @@ function __formatString(format, varargs) {
    }
    var argSize;
    switch (String.fromCharCode(next)) {
-   case "h":
+   "h":
     var nextNext = HEAP8[textIndex + 2 >> 0];
     if (nextNext == 104) {
      textIndex++;
@@ -11242,7 +11242,7 @@ function __formatString(format, varargs) {
      argSize = 2;
     }
     break;
-   case "l":
+   "l":
     var nextNext = HEAP8[textIndex + 2 >> 0];
     if (nextNext == 108) {
      textIndex++;
@@ -11251,14 +11251,14 @@ function __formatString(format, varargs) {
      argSize = 4;
     }
     break;
-   case "L":
-   case "q":
-   case "j":
+   "L":
+   "q":
+   "j":
     argSize = 8;
     break;
-   case "z":
-   case "t":
-   case "I":
+   "z":
+   "t":
+   "I":
     argSize = 4;
     break;
    default:
@@ -11267,13 +11267,13 @@ function __formatString(format, varargs) {
    if (argSize) textIndex++;
    next = HEAP8[textIndex + 1 >> 0];
    switch (String.fromCharCode(next)) {
-   case "d":
-   case "i":
-   case "u":
-   case "o":
-   case "x":
-   case "X":
-   case "p":
+   "d":
+   "i":
+   "u":
+   "o":
+   "x":
+   "X":
+   "p":
     {
      var signed = next == 100 || next == 105;
      argSize = argSize || 4;
@@ -11364,12 +11364,12 @@ function __formatString(format, varargs) {
      }));
      break;
     }
-   case "f":
-   case "F":
-   case "e":
-   case "E":
-   case "g":
-   case "G":
+   "f":
+   "F":
+   "e":
+   "E":
+   "g":
+   "G":
     {
      currArg = getNextArg("double");
      var argText;
@@ -11442,7 +11442,7 @@ function __formatString(format, varargs) {
      }));
      break;
     }
-   case "s":
+   "s":
     {
      var arg = getNextArg("i8*");
      var argLength = arg ? _strlen(arg) : "(null)".length;
@@ -11466,7 +11466,7 @@ function __formatString(format, varargs) {
      }
      break;
     }
-   case "c":
+   "c":
     {
      if (flagLeftAlign) ret.push(getNextArg("i8"));
      while (--width > 0) {
@@ -11475,13 +11475,13 @@ function __formatString(format, varargs) {
      if (!flagLeftAlign) ret.push(getNextArg("i8"));
      break;
     }
-   case "n":
+   "n":
     {
      var ptr = getNextArg("i32*");
      HEAP32[ptr >> 2] = ret.length;
      break;
     }
-   case "%":
+   "%":
     {
      ret.push(curr);
      break;
@@ -12665,28 +12665,28 @@ function _glFlush() {
 }
 function emscriptenWebGLGetBufferBinding(target) {
  switch (target) {
- case 34962:
+ 34962:
   target = 34964;
   break;
- case 34963:
+ 34963:
   target = 34965;
   break;
- case 35051:
+ 35051:
   target = 35053;
   break;
- case 35052:
+ 35052:
   target = 35055;
   break;
- case 35982:
+ 35982:
   target = 35983;
   break;
- case 36662:
+ 36662:
   target = 36662;
   break;
- case 36663:
+ 36663:
   target = 36663;
   break;
- case 35345:
+ 35345:
   target = 35368;
   break;
  }
@@ -12695,15 +12695,15 @@ function emscriptenWebGLGetBufferBinding(target) {
 }
 function emscriptenWebGLValidateMapBufferTarget(target) {
  switch (target) {
- case 34962:
- case 34963:
- case 36662:
- case 36663:
- case 35051:
- case 35052:
- case 35882:
- case 35982:
- case 35345:
+ 34962:
+ 34963:
+ 36662:
+ 36663:
+ 35051:
+ 35052:
+ 35882:
+ 35982:
+ 35345:
   return true;
  default:
   return false;
@@ -12904,7 +12904,7 @@ function _glGetActiveUniformBlockiv(program, uniformBlockIndex, pname, params) {
  }
  program = GL.programs[program];
  switch (pname) {
- case 35393:
+ 35393:
   var name = GLctx["getActiveUniformBlockName"](program, uniformBlockIndex);
   HEAP32[params >> 2] = name.length + 1;
   return;
@@ -12968,17 +12968,17 @@ function emscriptenWebGLGetIndexed(target, index, data, type) {
  var result = GLctx["getIndexedParameter"](target, index);
  var ret;
  switch (typeof result) {
- case "boolean":
+ "boolean":
   ret = result ? 1 : 0;
   break;
- case "number":
+ "number":
   ret = result;
   break;
- case "object":
+ "object":
   if (result === null) {
    switch (target) {
-   case 35983:
-   case 35368:
+   35983:
+   35368:
     ret = 0;
     break;
    default:
@@ -12999,16 +12999,16 @@ function emscriptenWebGLGetIndexed(target, index, data, type) {
   return;
  }
  switch (type) {
- case "Integer64":
+ "Integer64":
   tempI64 = [ ret >>> 0, (tempDouble = ret, +Math_abs(tempDouble) >= 1 ? tempDouble > 0 ? (Math_min(+Math_floor(tempDouble / 4294967296), 4294967295) | 0) >>> 0 : ~~+Math_ceil((tempDouble - +(~~tempDouble >>> 0)) / 4294967296) >>> 0 : 0) ], HEAP32[data >> 2] = tempI64[0], HEAP32[data + 4 >> 2] = tempI64[1];
   break;
- case "Integer":
+ "Integer":
   HEAP32[data >> 2] = ret;
   break;
- case "Float":
+ "Float":
   HEAPF32[data >> 2] = ret;
   break;
- case "Boolean":
+ "Boolean":
   HEAP8[data >> 0] = ret ? 1 : 0;
   break;
  default:
@@ -13025,23 +13025,23 @@ function emscriptenWebGLGet(name_, p, type) {
  }
  var ret = undefined;
  switch (name_) {
- case 36346:
+ 36346:
   ret = 1;
   break;
- case 36344:
+ 36344:
   if (type !== "Integer" && type !== "Integer64") {
    GL.recordError(1280);
   }
   return;
- case 34814:
- case 36345:
+ 34814:
+ 36345:
   ret = 0;
   break;
- case 34466:
+ 34466:
   var formats = GLctx.getParameter(34467);
   ret = formats.length;
   break;
- case 33309:
+ 33309:
   if (GLctx.canvas.GLctxObject.version < 2) {
    GL.recordError(1282);
    return;
@@ -13049,8 +13049,8 @@ function emscriptenWebGLGet(name_, p, type) {
   var exts = GLctx.getSupportedExtensions();
   ret = 2 * exts.length;
   break;
- case 33307:
- case 33308:
+ 33307:
+ 33308:
   if (GLctx.canvas.GLctxObject.version < 2) {
    GL.recordError(1280);
    return;
@@ -13061,28 +13061,28 @@ function emscriptenWebGLGet(name_, p, type) {
  if (ret === undefined) {
   var result = GLctx.getParameter(name_);
   switch (typeof result) {
-  case "number":
+  "number":
    ret = result;
    break;
-  case "boolean":
+  "boolean":
    ret = result ? 1 : 0;
    break;
-  case "string":
+  "string":
    GL.recordError(1280);
    return;
-  case "object":
+  "object":
    if (result === null) {
     switch (name_) {
-    case 34964:
-    case 35725:
-    case 34965:
-    case 36006:
-    case 36007:
-    case 32873:
-    case 34229:
-    case 35097:
-    case 36389:
-    case 34068:
+    34964:
+    35725:
+    34965:
+    36006:
+    36007:
+    32873:
+    34229:
+    35097:
+    36389:
+    34068:
      {
       ret = 0;
       break;
@@ -13096,13 +13096,13 @@ function emscriptenWebGLGet(name_, p, type) {
    } else if (result instanceof Float32Array || result instanceof Uint32Array || result instanceof Int32Array || result instanceof Array) {
     for (var i = 0; i < result.length; ++i) {
      switch (type) {
-     case "Integer":
+     "Integer":
       HEAP32[p + i * 4 >> 2] = result[i];
       break;
-     case "Float":
+     "Float":
       HEAPF32[p + i * 4 >> 2] = result[i];
       break;
-     case "Boolean":
+     "Boolean":
       HEAP8[p + i >> 0] = result[i] ? 1 : 0;
       break;
      default:
@@ -13123,16 +13123,16 @@ function emscriptenWebGLGet(name_, p, type) {
   }
  }
  switch (type) {
- case "Integer64":
+ "Integer64":
   tempI64 = [ ret >>> 0, (tempDouble = ret, +Math_abs(tempDouble) >= 1 ? tempDouble > 0 ? (Math_min(+Math_floor(tempDouble / 4294967296), 4294967295) | 0) >>> 0 : ~~+Math_ceil((tempDouble - +(~~tempDouble >>> 0)) / 4294967296) >>> 0 : 0) ], HEAP32[p >> 2] = tempI64[0], HEAP32[p + 4 >> 2] = tempI64[1];
   break;
- case "Integer":
+ "Integer":
   HEAP32[p >> 2] = ret;
   break;
- case "Float":
+ "Float":
   HEAPF32[p >> 2] = ret;
   break;
- case "Boolean":
+ "Boolean":
   HEAP8[p >> 0] = ret ? 1 : 0;
   break;
  default:
@@ -13153,14 +13153,14 @@ function _glGetInternalformativ(target, internalformat, pname, bufSize, params) 
   return;
  }
  switch (pname) {
- case 32937:
+ 32937:
   var n = Math.min(bufSize, samples.length);
   for (var i = 0; i < n; i++) {
    var v = samples[i];
    HEAP32[params + i * 4 >> 2] = v;
   }
   break;
- case 37760:
+ 37760:
   if (bufSize > 1) {
    var v = samples.length;
    HEAP32[params >> 2] = v;
@@ -13283,20 +13283,20 @@ function _glGetString(name_) {
  if (GL.stringCache[name_]) return GL.stringCache[name_];
  var ret;
  switch (name_) {
- case 7936:
- case 7937:
- case 37445:
- case 37446:
+ 7936:
+ 7937:
+ 37445:
+ 37446:
   ret = allocate(intArrayFromString(GLctx.getParameter(name_)), "i8", ALLOC_NORMAL);
   break;
- case 7938:
+ 7938:
   var glVersion = GLctx.getParameter(GLctx.VERSION);
   if (GLctx.canvas.GLctxObject.version >= 2) glVersion = "OpenGL ES 3.0 (" + glVersion + ")"; else {
    glVersion = "OpenGL ES 2.0 (" + glVersion + ")";
   }
   ret = allocate(intArrayFromString(glVersion), "i8", ALLOC_NORMAL);
   break;
- case 7939:
+ 7939:
   var exts = GLctx.getSupportedExtensions();
   var gl_exts = [];
   for (var i = 0; i < exts.length; ++i) {
@@ -13305,7 +13305,7 @@ function _glGetString(name_) {
   }
   ret = allocate(intArrayFromString(gl_exts.join(" ")), "i8", ALLOC_NORMAL);
   break;
- case 35724:
+ 35724:
   var glslVersion = GLctx.getParameter(GLctx.SHADING_LANGUAGE_VERSION);
   var ver_re = /^WebGL GLSL ES ([0-9]\.[0-9][0-9]?)(?:$| .*)/;
   var ver_num = glslVersion.match(ver_re);
@@ -13336,7 +13336,7 @@ function _glGetStringi(name, index) {
   return stringiCache[index];
  }
  switch (name) {
- case 7939:
+ 7939:
   var exts = GLctx.getSupportedExtensions();
   var gl_exts = [];
   for (var i = 0; i < exts.length; ++i) {
@@ -13419,10 +13419,10 @@ function emscriptenWebGLGetUniform(program, location, params, type) {
  var data = GLctx.getUniform(GL.programs[program], GL.uniforms[location]);
  if (typeof data == "number" || typeof data == "boolean") {
   switch (type) {
-  case "Integer":
+  "Integer":
    HEAP32[params >> 2] = data;
    break;
-  case "Float":
+  "Float":
    HEAPF32[params >> 2] = data;
    break;
   default:
@@ -13431,10 +13431,10 @@ function emscriptenWebGLGetUniform(program, location, params, type) {
  } else {
   for (var i = 0; i < data.length; i++) {
    switch (type) {
-   case "Integer":
+   "Integer":
     HEAP32[params + i * 4 >> 2] = data[i];
     break;
-   case "Float":
+   "Float":
     HEAPF32[params + i * 4 >> 2] = data[i];
     break;
    default:
@@ -13456,13 +13456,13 @@ function emscriptenWebGLGetVertexAttrib(index, pname, params, type) {
   HEAP32[params >> 2] = data["name"];
  } else if (typeof data == "number" || typeof data == "boolean") {
   switch (type) {
-  case "Integer":
+  "Integer":
    HEAP32[params >> 2] = data;
    break;
-  case "Float":
+  "Float":
    HEAPF32[params >> 2] = data;
    break;
-  case "FloatToInteger":
+  "FloatToInteger":
    HEAP32[params >> 2] = Math.fround(data);
    break;
   default:
@@ -13471,13 +13471,13 @@ function emscriptenWebGLGetVertexAttrib(index, pname, params, type) {
  } else {
   for (var i = 0; i < data.length; i++) {
    switch (type) {
-   case "Integer":
+   "Integer":
     HEAP32[params + i * 4 >> 2] = data[i];
     break;
-   case "Float":
+   "Float":
     HEAPF32[params + i * 4 >> 2] = data[i];
     break;
-   case "FloatToInteger":
+   "FloatToInteger":
     HEAP32[params + i * 4 >> 2] = Math.fround(data[i]);
     break;
    default:
@@ -13561,26 +13561,26 @@ function emscriptenWebGLGetTexPixelData(type, format, width, height, pixels, int
  var sizePerPixel;
  var numChannels;
  switch (format) {
- case 6406:
- case 6409:
- case 6402:
- case 6403:
- case 36244:
+ 6406:
+ 6409:
+ 6402:
+ 6403:
+ 36244:
   numChannels = 1;
   break;
- case 6410:
- case 33319:
- case 33320:
+ 6410:
+ 33319:
+ 33320:
   numChannels = 2;
   break;
- case 6407:
- case 35904:
- case 36248:
+ 6407:
+ 35904:
+ 36248:
   numChannels = 3;
   break;
- case 6408:
- case 35906:
- case 36249:
+ 6408:
+ 35906:
+ 36249:
   numChannels = 4;
   break;
  default:
@@ -13588,31 +13588,31 @@ function emscriptenWebGLGetTexPixelData(type, format, width, height, pixels, int
   return null;
  }
  switch (type) {
- case 5121:
- case 5120:
+ 5121:
+ 5120:
   sizePerPixel = numChannels * 1;
   break;
- case 5123:
- case 36193:
- case 5131:
- case 5122:
+ 5123:
+ 36193:
+ 5131:
+ 5122:
   sizePerPixel = numChannels * 2;
   break;
- case 5125:
- case 5126:
- case 5124:
+ 5125:
+ 5126:
+ 5124:
   sizePerPixel = numChannels * 4;
   break;
- case 34042:
- case 35902:
- case 33640:
- case 35899:
- case 34042:
+ 34042:
+ 35902:
+ 33640:
+ 35899:
+ 34042:
   sizePerPixel = 4;
   break;
- case 33635:
- case 32819:
- case 32820:
+ 33635:
+ 32819:
+ 32820:
   sizePerPixel = 2;
   break;
  default:
@@ -13621,29 +13621,29 @@ function emscriptenWebGLGetTexPixelData(type, format, width, height, pixels, int
  }
  var bytes = emscriptenWebGLComputeImageSize(width, height, sizePerPixel, GL.unpackAlignment);
  switch (type) {
- case 5120:
+ 5120:
   return HEAP8.subarray(pixels, pixels + bytes);
- case 5121:
+ 5121:
   return HEAPU8.subarray(pixels, pixels + bytes);
- case 5122:
+ 5122:
   return HEAP16.subarray(pixels >> 1, pixels + bytes >> 1);
- case 5124:
+ 5124:
   return HEAP32.subarray(pixels >> 2, pixels + bytes >> 2);
- case 5126:
+ 5126:
   return HEAPF32.subarray(pixels >> 2, pixels + bytes >> 2);
- case 5125:
- case 34042:
- case 35902:
- case 33640:
- case 35899:
- case 34042:
+ 5125:
+ 34042:
+ 35902:
+ 33640:
+ 35899:
+ 34042:
   return HEAPU32.subarray(pixels >> 2, pixels + bytes >> 2);
- case 5123:
- case 33635:
- case 32819:
- case 32820:
- case 36193:
- case 5131:
+ 5123:
+ 33635:
+ 32819:
+ 32820:
+ 36193:
+ 5131:
   return HEAPU16.subarray(pixels >> 1, pixels + bytes >> 1);
  default:
   GL.recordError(1280);
@@ -13652,29 +13652,29 @@ function emscriptenWebGLGetTexPixelData(type, format, width, height, pixels, int
 }
 function emscriptenWebGLGetHeapForType(type) {
  switch (type) {
- case 5120:
+ 5120:
   return HEAP8;
- case 5121:
+ 5121:
   return HEAPU8;
- case 5122:
+ 5122:
   return HEAP16;
- case 5123:
- case 33635:
- case 32819:
- case 32820:
- case 36193:
- case 5131:
+ 5123:
+ 33635:
+ 32819:
+ 32820:
+ 36193:
+ 5131:
   return HEAPU16;
- case 5124:
+ 5124:
   return HEAP32;
- case 5125:
- case 34042:
- case 35902:
- case 33640:
- case 35899:
- case 34042:
+ 5125:
+ 34042:
+ 35902:
+ 33640:
+ 35899:
+ 34042:
   return HEAPU32;
- case 5126:
+ 5126:
   return HEAPF32;
  default:
   return null;
@@ -13682,25 +13682,25 @@ function emscriptenWebGLGetHeapForType(type) {
 }
 function emscriptenWebGLGetShiftForType(type) {
  switch (type) {
- case 5120:
- case 5121:
+ 5120:
+ 5121:
   return 0;
- case 5122:
- case 5123:
- case 33635:
- case 32819:
- case 32820:
- case 36193:
- case 5131:
+ 5122:
+ 5123:
+ 33635:
+ 32819:
+ 32820:
+ 36193:
+ 5131:
   return 1;
- case 5124:
- case 5126:
- case 5125:
- case 34042:
- case 35902:
- case 33640:
- case 35899:
- case 34042:
+ 5124:
+ 5126:
+ 5125:
+ 34042:
+ 35902:
+ 33640:
+ 35899:
+ 34042:
   return 2;
  default:
   return 0;
@@ -14365,19 +14365,19 @@ function _strftime(s, maxsize, format, tm) {
  }
  function getFirstWeekStartDate(janFourth) {
   switch (janFourth.getDay()) {
-  case 0:
+  0:
    return new Date(janFourth.getFullYear() - 1, 11, 29);
-  case 1:
+  1:
    return janFourth;
-  case 2:
+  2:
    return new Date(janFourth.getFullYear(), 0, 3);
-  case 3:
+  3:
    return new Date(janFourth.getFullYear(), 0, 2);
-  case 4:
+  4:
    return new Date(janFourth.getFullYear(), 0, 1);
-  case 5:
+  5:
    return new Date(janFourth.getFullYear() - 1, 11, 31);
-  case 6:
+  6:
    return new Date(janFourth.getFullYear() - 1, 11, 30);
   }
  }
@@ -14545,157 +14545,157 @@ function _strftime(s, maxsize, format, tm) {
 }
 function _sysconf(name) {
  switch (name) {
- case 30:
+ 30:
   return PAGE_SIZE;
- case 85:
+ 85:
   var maxHeapSize = 2 * 1024 * 1024 * 1024 - 65536;
   return maxHeapSize / PAGE_SIZE;
- case 132:
- case 133:
- case 12:
- case 137:
- case 138:
- case 15:
- case 235:
- case 16:
- case 17:
- case 18:
- case 19:
- case 20:
- case 149:
- case 13:
- case 10:
- case 236:
- case 153:
- case 9:
- case 21:
- case 22:
- case 159:
- case 154:
- case 14:
- case 77:
- case 78:
- case 139:
- case 80:
- case 81:
- case 82:
- case 68:
- case 67:
- case 164:
- case 11:
- case 29:
- case 47:
- case 48:
- case 95:
- case 52:
- case 51:
- case 46:
+ 132:
+ 133:
+ 12:
+ 137:
+ 138:
+ 15:
+ 235:
+ 16:
+ 17:
+ 18:
+ 19:
+ 20:
+ 149:
+ 13:
+ 10:
+ 236:
+ 153:
+ 9:
+ 21:
+ 22:
+ 159:
+ 154:
+ 14:
+ 77:
+ 78:
+ 139:
+ 80:
+ 81:
+ 82:
+ 68:
+ 67:
+ 164:
+ 11:
+ 29:
+ 47:
+ 48:
+ 95:
+ 52:
+ 51:
+ 46:
   return 200809;
- case 79:
+ 79:
   return 0;
- case 27:
- case 246:
- case 127:
- case 128:
- case 23:
- case 24:
- case 160:
- case 161:
- case 181:
- case 182:
- case 242:
- case 183:
- case 184:
- case 243:
- case 244:
- case 245:
- case 165:
- case 178:
- case 179:
- case 49:
- case 50:
- case 168:
- case 169:
- case 175:
- case 170:
- case 171:
- case 172:
- case 97:
- case 76:
- case 32:
- case 173:
- case 35:
+ 27:
+ 246:
+ 127:
+ 128:
+ 23:
+ 24:
+ 160:
+ 161:
+ 181:
+ 182:
+ 242:
+ 183:
+ 184:
+ 243:
+ 244:
+ 245:
+ 165:
+ 178:
+ 179:
+ 49:
+ 50:
+ 168:
+ 169:
+ 175:
+ 170:
+ 171:
+ 172:
+ 97:
+ 76:
+ 32:
+ 173:
+ 35:
   return -1;
- case 176:
- case 177:
- case 7:
- case 155:
- case 8:
- case 157:
- case 125:
- case 126:
- case 92:
- case 93:
- case 129:
- case 130:
- case 131:
- case 94:
- case 91:
+ 176:
+ 177:
+ 7:
+ 155:
+ 8:
+ 157:
+ 125:
+ 126:
+ 92:
+ 93:
+ 129:
+ 130:
+ 131:
+ 94:
+ 91:
   return 1;
- case 74:
- case 60:
- case 69:
- case 70:
- case 4:
+ 74:
+ 60:
+ 69:
+ 70:
+ 4:
   return 1024;
- case 31:
- case 42:
- case 72:
+ 31:
+ 42:
+ 72:
   return 32;
- case 87:
- case 26:
- case 33:
+ 87:
+ 26:
+ 33:
   return 2147483647;
- case 34:
- case 1:
+ 34:
+ 1:
   return 47839;
- case 38:
- case 36:
+ 38:
+ 36:
   return 99;
- case 43:
- case 37:
+ 43:
+ 37:
   return 2048;
- case 0:
+ 0:
   return 2097152;
- case 3:
+ 3:
   return 65536;
- case 28:
+ 28:
   return 32768;
- case 44:
+ 44:
   return 32767;
- case 75:
+ 75:
   return 16384;
- case 39:
+ 39:
   return 1e3;
- case 89:
+ 89:
   return 700;
- case 71:
+ 71:
   return 256;
- case 40:
+ 40:
   return 255;
- case 2:
+ 2:
   return 100;
- case 180:
+ 180:
   return 64;
- case 25:
+ 25:
   return 20;
- case 5:
+ 5:
   return 16;
- case 6:
+ 6:
   return 6;
- case 73:
+ 73:
   return 4;
- case 84:
+ 84:
   {
    if (typeof navigator === "object") return navigator["hardwareConcurrency"] || 1;
    return 1;

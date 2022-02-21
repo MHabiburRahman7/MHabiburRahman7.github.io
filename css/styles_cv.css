@@ -9758,12 +9758,12 @@ button.bg-dark:focus {
     text-align: center !important;
   }
 }
-.text-lowercase {
-  text-transform: lowercase !important;
+.text-lower{
+  text-transform: lower!important;
 }
 
-.text-uppercase {
-  text-transform: uppercase !important;
+.text-upper{
+  text-transform: upper!important;
 }
 
 .text-capitalize {
